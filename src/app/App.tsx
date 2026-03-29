@@ -155,7 +155,7 @@ export default function App() {
         {!hasStartedChat ? (
           <motion.div
             key="landing"
-            className="flex-1 flex flex-col items-center justify-center px-4 pb-8 pt-16 sm:pt-20"
+            className="flex-1 flex flex-col items-center px-4 pb-8 pt-16 sm:pt-20 overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -196,8 +196,8 @@ export default function App() {
                   showPreChat={showPreChat}
                   onPreChatSubmit={handlePreChatSubmit}
                 />
-                <TagQuestions onTagClick={handleTagClick} isLimitReached={isLimitReached} />
                 <p className="text-xs text-muted-foreground/50 text-center font-mono">AI can make mistakes — so don't take everything too seriously lol</p>
+                <TagQuestions onTagClick={handleTagClick} isLimitReached={isLimitReached} />
               </div>
             </motion.div>
 
@@ -272,8 +272,8 @@ export default function App() {
                     showPreChat={showPreChat}
                     onPreChatSubmit={handlePreChatSubmit}
                   />
-                  <TagQuestions onTagClick={handleTagClick} isLimitReached={isLimitReached} collapsible />
                   <p className="text-xs text-muted-foreground/50 text-center font-mono">AI can make mistakes — so don't take everything too seriously lol</p>
+                  <TagQuestions onTagClick={handleTagClick} isLimitReached={isLimitReached} collapsible />
                 </div>
               </div>
             </main>
