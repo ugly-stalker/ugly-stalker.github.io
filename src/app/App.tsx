@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -50,15 +50,9 @@ export default function App() {
   const [userName, setUserName] = useState('');
   const [userCompany, setUserCompany] = useState('');
   const [isLimitReached, setIsLimitReached] = useState(false);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const MESSAGE_LIMIT = 20;
 
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  }, [messages, isTyping]);
 
   const handlePreChatSubmit = (name: string, company: string) => {
     setUserName(name);
@@ -115,7 +109,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background relative overflow-hidden max-w-full">
+    <div className="flex flex-col h-[100dvh] bg-background relative overflow-hidden max-w-full" style={{ isolation: 'isolate' }}>
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-[0.06] pointer-events-none"
@@ -135,30 +129,32 @@ export default function App() {
       />
 
       {/* Animated ambient glow effects */}
-      <motion.div
-        className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
-        style={{ background: 'rgba(255, 255, 255, 0.03)' }}
-        animate={{ x: [0, 140, -40, 0], y: [0, 80, 30, 0], scale: [1, 1.3, 0.9, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full blur-[140px] pointer-events-none"
-        style={{ background: 'rgba(220, 230, 255, 0.025)' }}
-        animate={{ x: [0, -120, 60, 0], y: [0, -100, -30, 0], scale: [1, 1.4, 0.95, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute top-1/2 right-1/3 w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: 'rgba(255, 255, 255, 0.02)' }}
-        animate={{ x: [0, 100, -60, 0], y: [0, -80, 40, 0], scale: [1, 1.2, 0.85, 1] }}
-        transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute top-1/3 left-0 w-[350px] h-[350px] rounded-full blur-[120px] pointer-events-none"
-        style={{ background: 'rgba(200, 220, 255, 0.02)' }}
-        animate={{ x: [0, 80, 20, 0], y: [0, 60, -40, 0], scale: [1, 1.15, 0.9, 1] }}
-        transition={{ duration: 17, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[140px]"
+          style={{ background: 'rgba(255, 255, 255, 0.03)' }}
+          animate={{ x: [0, 140, -40, 0], y: [0, 80, 30, 0], scale: [1, 1.3, 0.9, 1] }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full blur-[140px]"
+          style={{ background: 'rgba(220, 230, 255, 0.025)' }}
+          animate={{ x: [0, -120, 60, 0], y: [0, -100, -30, 0], scale: [1, 1.4, 0.95, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-1/2 right-1/3 w-[400px] h-[400px] rounded-full blur-[120px]"
+          style={{ background: 'rgba(255, 255, 255, 0.02)' }}
+          animate={{ x: [0, 100, -60, 0], y: [0, -80, 40, 0], scale: [1, 1.2, 0.85, 1] }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-1/3 left-0 w-[350px] h-[350px] rounded-full blur-[120px]"
+          style={{ background: 'rgba(200, 220, 255, 0.02)' }}
+          animate={{ x: [0, 80, 20, 0], y: [0, 60, -40, 0], scale: [1, 1.15, 0.9, 1] }}
+          transition={{ duration: 17, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
 
       <AnimatePresence mode="wait">
         {!hasStartedChat ? (
@@ -252,7 +248,6 @@ export default function App() {
 
             <main className="flex-1 flex flex-col overflow-hidden relative">
               <div
-                ref={chatContainerRef}
                 className="flex-1 overflow-y-auto px-4 sm:px-6 py-6"
                 aria-live="polite"
               >
