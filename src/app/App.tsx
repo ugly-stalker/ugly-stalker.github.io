@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -52,7 +52,15 @@ export default function App() {
   const [isLimitReached, setIsLimitReached] = useState(false);
 
   const MESSAGE_LIMIT = 20;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    const lastMessage = lastMessageRef.current;
+    if (!container || !lastMessage) return;
+    container.scrollTo({ top: lastMessage.offsetTop, behavior: 'smooth' });
+  }, [messages]);
 
   const handlePreChatSubmit = (name: string, company: string) => {
     setUserName(name);
@@ -248,20 +256,22 @@ export default function App() {
 
             <main className="flex-1 flex flex-col overflow-hidden relative">
               <div
+                ref={scrollContainerRef}
                 className="flex-1 overflow-y-auto px-4 sm:px-6 py-6"
                 aria-live="polite"
               >
                 <div className="max-w-3xl mx-auto">
                   {messages.map((msg, index) => (
-                    <ChatBubble
-                      key={msg.id}
-                      message={msg.text}
-                      type={msg.type}
-                      isFirstAI={
-                        msg.type === 'ai' &&
-                        (index === 0 || messages[index - 1].type !== 'ai')
-                      }
-                    />
+                    <div key={msg.id} ref={index === messages.length - 1 ? lastMessageRef : null}>
+                      <ChatBubble
+                        message={msg.text}
+                        type={msg.type}
+                        isFirstAI={
+                          msg.type === 'ai' &&
+                          (index === 0 || messages[index - 1].type !== 'ai')
+                        }
+                      />
+                    </div>
                   ))}
                   {isTyping && <TypingIndicator />}
                 </div>
